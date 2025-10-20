@@ -35,7 +35,12 @@ export function TreeNodeRow({ nodeId, depth, style }: TreeNodeRowProps) {
         cursor-pointer transition-colors
         ${isSelected ? 'bg-blue-100 dark:bg-blue-900' : ''}
       `}
-      onClick={() => setSelectedNodeId(nodeId)}
+      onClick={() => {
+        setSelectedNodeId(nodeId);
+        if (hasChildren) {
+          toggleExpanded(nodeId);
+        }
+      }}
     >
       <div style={{ width: depth * 20 }} className="flex-shrink-0" />
 

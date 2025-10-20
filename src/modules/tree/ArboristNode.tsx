@@ -22,7 +22,12 @@ export function ArboristNode({ node, style, dragHandle }: NodeRendererProps<Tree
         cursor-pointer transition-colors
         ${isSelected ? 'bg-blue-100 dark:bg-blue-900' : ''}
       `}
-      onClick={(e) => node.handleClick(e)}
+      onClick={(e) => {
+        node.handleClick(e);
+        if (hasChildren) {
+          node.toggle();
+        }
+      }}
     >
       {/* Expand/collapse button */}
       <button
