@@ -1,5 +1,54 @@
 implement everything you read here and use this as a living document where you track your progress and list todos so we can tackle each step individually.
 
+---
+
+# IMPLEMENTATION PROGRESS (Updated: 2025-10-20)
+
+## ✅ Completed Tasks
+
+- Project setup (Vite + React 19 + TypeScript + Tailwind CSS v3)
+- All dependencies installed (zustand, mqtt, dexie, react-router-dom)
+- Complete folder structure created
+- Type definitions for MQTT, tree, profiles, and UI
+- Zustand stores: topic store, connection store, UI store
+- MQTT client factory with v5 support over WSS
+- useMqttClient hook with full lifecycle management
+- Dexie database schema and profile repository
+- Payload decode utilities (JSON, UTF-8, hex, base64)
+- Base UI components (Button, Input, Select, Toast)
+- ProfileForm and ProfileSwitcher components
+- ConnectPage with full profile management
+- PayloadPanel with JSON/text/hex/base64 views
+- PropertiesPanel showing MQTT v5 properties
+- ExplorerPage with tree and message panels
+- TreeNodeRow component with expand/collapse
+- Search/filter functionality for topics
+- Pause/resume toggle for message updates
+- React Router setup with routes
+- Docker Compose setup for local Mosquitto broker
+- **Custom VirtualList component** (replaced react-window for React 19 compatibility)
+- **Message batching system** with 120ms throttling (~60 Hz updates)
+- **MessageBatcher utility** for high message rate handling
+- **Message cap** at 50,000 messages with LRU eviction
+- Production build successful
+
+## 🔧 Current Status
+
+- Dev server running on http://localhost:5173/
+- All core features implemented
+- Ready for testing with a live MQTT broker
+
+## ⏳ Remaining Tasks
+
+- [ ] Test with live MQTT broker (Docker not running, needs manual start)
+- [ ] Add unit tests (Vitest) - deferred for now
+- [ ] Add e2e tests (Playwright) - deferred for now
+- [ ] Documentation for deployment
+- [ ] Optional: SettingsPage for UI preferences
+- [ ] Optional: Code splitting to reduce bundle size (currently 778KB)
+
+---
+
 # 0) Goals & non-goals (phase 1)
 
 **Goals**
@@ -478,35 +527,35 @@ protocol websockets
 
 # 19) Milestones & checklist
 
-**M1 – Skeleton**
+**M1 – Skeleton** ✅ COMPLETED
 
-* [ ] Vite + React + TS; Tailwind; routing.
-* [ ] Zustand stores scaffolding.
-* [ ] Profiles CRUD (Dexie).
+* [x] Vite + React + TS; Tailwind; routing.
+* [x] Zustand stores scaffolding.
+* [x] Profiles CRUD (Dexie).
 
-**M2 – Connect & Subscribe**
+**M2 – Connect & Subscribe** ✅ COMPLETED
 
-* [ ] `useMqttClient` implemented (connect, events, subscribe).
-* [ ] Basic toast/error system.
-* [ ] Subscribe to `#` by default.
+* [x] `useMqttClient` implemented (connect, events, subscribe).
+* [x] Basic toast/error system.
+* [x] Subscribe to `#` by default.
 
-**M3 – Topic Tree**
+**M3 – Topic Tree** ✅ COMPLETED
 
-* [ ] Topic store + upsert algorithm.
-* [ ] Virtualized TreeView with expand/collapse.
+* [x] Topic store + upsert algorithm.
+* [x] Custom VirtualList component with expand/collapse (replaced react-window).
 
-**M4 – Payload & Properties**
+**M4 – Payload & Properties** ✅ COMPLETED
 
-* [ ] Decode heuristics + JSON viewer.
-* [ ] Properties panel (retained, qos, userProperties…).
+* [x] Decode heuristics + JSON viewer.
+* [x] Properties panel (retained, qos, userProperties…).
 
-**M5 – Perf & UX polish**
+**M5 – Perf & UX polish** ✅ COMPLETED
 
-* [ ] Batched updates + throttling UI.
-* [ ] Search/filter + badges + timestamps.
-* [ ] Pause updates toggle.
+* [x] Batched updates + throttling UI (120ms batching, 50k message cap).
+* [x] Search/filter + badges + timestamps.
+* [x] Pause updates toggle.
 
-**M6 – Testing & Hardening**
+**M6 – Testing & Hardening** ⏳ NOT STARTED
 
 * [ ] Unit + e2e tests against dockerized Mosquitto.
 * [ ] CSP/HTTPS docs, sample mosquitto.conf for WSS+TLS.
