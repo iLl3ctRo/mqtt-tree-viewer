@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TreeView } from '../modules/tree/TreeView';
+import { TreeViewArborist } from '../modules/tree/TreeViewArborist';
 import { PayloadPanel } from '../modules/payload/PayloadPanel';
 import { PropertiesPanel } from '../modules/payload/PropertiesPanel';
 import { MessageHistoryPanel } from '../modules/payload/MessageHistoryPanel';
@@ -21,7 +21,6 @@ export function ExplorerPage() {
   const activeProfile = useConnectionStore((s) => s.activeProfile);
   const messagesReceived = useConnectionStore((s) => s.messagesReceived);
 
-  const nodes = useTopicStore((s) => s.nodes);
   const messages = useTopicStore((s) => s.messages);
   const messagesByTopic = useTopicStore((s) => s.messagesByTopic);
   const clearAll = useTopicStore((s) => s.clearAll);
@@ -143,7 +142,7 @@ export function ExplorerPage() {
             </div>
           </div>
           <div ref={treeContainerRef} className="flex-1 overflow-hidden">
-            <TreeView height={treeSize.height} />
+            <TreeViewArborist height={treeSize.height} width={treeSize.width} />
           </div>
         </div>
 

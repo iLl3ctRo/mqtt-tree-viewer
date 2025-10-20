@@ -20,6 +20,7 @@
     "dexie-react-hooks": "^4.2.0",
     "mqtt": "^5.14.1",
     "react": "^19.1.1",
+    "react-arborist": "^3.4.3",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.4",
     "zustand": "^5.0.8"
