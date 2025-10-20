@@ -39,6 +39,8 @@ export function ExplorerPage() {
 
   const treeContainerRef = useRef<HTMLDivElement>(null);
   const [treeSize, setTreeSize] = useState({ width: 400, height: 600 });
+  const [isHistoryCollapsed, setIsHistoryCollapsed] = useState(false);
+  const [compareMessageId, setCompareMessageId] = useState<string | null>(null);
 
   // Redirect if not connected
   useEffect(() => {
@@ -75,8 +77,32 @@ export function ExplorerPage() {
     }
   }, [topicMessages, selectedMessageId, setSelectedMessageId]);
 
+  // Clear comparison when switching topics
+  useEffect(() => {
+    setCompareMessageId(null);
+  }, [selectedNodeId]);
+
   // Get the selected message
   const selectedMessage = selectedMessageId ? messages.get(selectedMessageId) || null : null;
+
+  // Get the compare message (for diff mode)
+  // If user has manually selected a message to compare, use that
+  // Otherwise, if there are 2+ messages and we're viewing the newest, auto-compare with second-newest
+  const compareMessage = useMemo(() => {
+    if (compareMessageId) {
+      return messages.get(compareMessageId) || null;
+    }
+    // Auto-enable diff mode when viewing newest message and there are 2+ messages
+    if (topicMessages.length >= 2 && selectedMessageId === topicMessages[0].id) {
+      return topicMessages[1]; // Second-newest message
+    }
+    return null;
+  }, [compareMessageId, messages, topicMessages, selectedMessageId]);
+
+  // Handle comparison toggle
+  const handleCompareMessage = (messageId: string | null) => {
+    setCompareMessageId(messageId);
+  };
 
   const handleDisconnect = () => {
     disconnect();
@@ -146,7 +172,7 @@ export function ExplorerPage() {
           </div>
         </div>
 
-        {/* Right panel - Message history and details */}
+        {/* Right panel - Message details and history */}
         <div className="flex-1 flex flex-col">
           {selectedNodeId ? (
             <>
@@ -165,21 +191,16 @@ export function ExplorerPage() {
                   </Button>
                 )}
               </div>
-              <div className="flex-1 overflow-hidden flex">
-                {/* Left: Message history */}
-                <div className="w-1/3 border-r border-gray-200 dark:border-gray-700">
-                  <MessageHistoryPanel
-                    messages={topicMessages}
-                    selectedMessageId={selectedMessageId}
-                    onSelectMessage={setSelectedMessageId}
-                  />
-                </div>
-                {/* Right: Message details */}
-                <div className="flex-1 flex flex-col">
+              <div className="flex-1 overflow-hidden flex flex-col">
+                {/* Message details section */}
+                <div className={`${isHistoryCollapsed ? 'flex-1' : 'h-1/2'} flex flex-col border-b border-gray-200 dark:border-gray-700`}>
                   {selectedMessage ? (
                     <>
                       <div className={showPropertiesPanel ? 'h-1/2' : 'h-full'}>
-                        <PayloadPanel message={selectedMessage} />
+                        <PayloadPanel
+                          message={selectedMessage}
+                          compareWithMessage={compareMessage || undefined}
+                        />
                       </div>
                       {showPropertiesPanel && (
                         <div className="h-1/2 border-t border-gray-200 dark:border-gray-700 overflow-auto bg-white dark:bg-gray-800">
@@ -192,6 +213,31 @@ export function ExplorerPage() {
                       <p>No messages received on this topic</p>
                     </div>
                   ) : null}
+                </div>
+                {/* Message history section */}
+                <div className={`${isHistoryCollapsed ? 'h-auto' : 'h-1/2'} flex flex-col`}>
+                  <div
+                    className="px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    onClick={() => setIsHistoryCollapsed(!isHistoryCollapsed)}
+                  >
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      Message History
+                    </h3>
+                    <button className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                      {isHistoryCollapsed ? '▲' : '▼'}
+                    </button>
+                  </div>
+                  {!isHistoryCollapsed && (
+                    <div className="flex-1 overflow-hidden">
+                      <MessageHistoryPanel
+                        messages={topicMessages}
+                        selectedMessageId={selectedMessageId}
+                        onSelectMessage={setSelectedMessageId}
+                        compareMessageId={compareMessageId}
+                        onCompareMessage={handleCompareMessage}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </>

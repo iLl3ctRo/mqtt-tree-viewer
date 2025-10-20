@@ -2,18 +2,26 @@
 
 import { useState } from 'react';
 import { JsonViewer } from './JsonViewer';
+import { DiffViewer } from './DiffViewer';
 import { toHex, toBase64, formatBytes } from '../../utils/bytes';
 import type { MessageRecord } from '../tree/types';
 
 export interface PayloadPanelProps {
   message: MessageRecord;
+  compareWithMessage?: MessageRecord; // For diff mode
 }
 
-type ViewMode = 'pretty' | 'text' | 'hex' | 'base64';
+type ViewMode = 'pretty' | 'text' | 'hex' | 'base64' | 'diff';
 
-export function PayloadPanel({ message }: PayloadPanelProps) {
+export function PayloadPanel({ message, compareWithMessage }: PayloadPanelProps) {
   const [viewMode, setViewMode] = useState<ViewMode>(
-    message.payloadJson !== undefined ? 'pretty' : message.payloadText ? 'text' : 'hex'
+    compareWithMessage
+      ? 'diff'
+      : message.payloadJson !== undefined
+      ? 'pretty'
+      : message.payloadText
+      ? 'text'
+      : 'hex'
   );
 
   const [copied, setCopied] = useState(false);
@@ -29,6 +37,18 @@ export function PayloadPanel({ message }: PayloadPanelProps) {
       {/* Header with tabs */}
       <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-4 py-2">
         <div className="flex gap-2">
+          {compareWithMessage && (
+            <button
+              onClick={() => setViewMode('diff')}
+              className={`px-3 py-1 text-sm rounded transition-colors ${
+                viewMode === 'diff'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+            >
+              Diff
+            </button>
+          )}
           {message.payloadJson !== undefined && (
             <button
               onClick={() => setViewMode('pretty')}
@@ -79,6 +99,10 @@ export function PayloadPanel({ message }: PayloadPanelProps) {
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-4">
+        {viewMode === 'diff' && compareWithMessage && (
+          <DiffViewer oldMessage={compareWithMessage} newMessage={message} />
+        )}
+
         {viewMode === 'pretty' && message.payloadJson !== undefined && <JsonViewer data={message.payloadJson} />}
 
         {viewMode === 'text' && message.payloadText && (
