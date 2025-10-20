@@ -65,6 +65,11 @@ export function ArboristNode({ node, style, dragHandle }: NodeRendererProps<Tree
       {/* Node name */}
       <span className="flex-1 truncate text-sm text-gray-900 dark:text-gray-100">
         {node.data.name}
+        {hasChildren && (
+          <span className="ml-1 text-gray-500 dark:text-gray-400">
+            ({node.children?.length || 0})
+          </span>
+        )}
       </span>
 
       {/* Metadata badges */}

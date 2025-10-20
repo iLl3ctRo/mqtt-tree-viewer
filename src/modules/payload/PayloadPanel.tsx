@@ -14,10 +14,9 @@ export interface PayloadPanelProps {
 type ViewMode = 'pretty' | 'text' | 'hex' | 'base64' | 'diff';
 
 export function PayloadPanel({ message, compareWithMessage }: PayloadPanelProps) {
+  // Always prefer Pretty JSON when available, regardless of diff mode
   const [viewMode, setViewMode] = useState<ViewMode>(
-    compareWithMessage
-      ? 'diff'
-      : message.payloadJson !== undefined
+    message.payloadJson !== undefined
       ? 'pretty'
       : message.payloadText
       ? 'text'

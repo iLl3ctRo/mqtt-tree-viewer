@@ -75,7 +75,14 @@ export function TreeNodeRow({ nodeId, depth, style }: TreeNodeRowProps) {
         {hasChildren ? (isExpanded ? '▾' : '▸') : '•'}
       </button>
 
-      <span className="flex-1 truncate text-sm text-gray-900 dark:text-gray-100">{node.name}</span>
+      <span className="flex-1 truncate text-sm text-gray-900 dark:text-gray-100">
+        {node.name}
+        {hasChildren && (
+          <span className="ml-1 text-gray-500 dark:text-gray-400">
+            ({node.children.length})
+          </span>
+        )}
+      </span>
 
       <div className="flex items-center gap-2 ml-2 flex-shrink-0">
         {node.retained && (
