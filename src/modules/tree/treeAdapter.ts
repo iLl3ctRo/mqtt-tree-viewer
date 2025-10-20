@@ -16,6 +16,7 @@ export interface TreeNodeData {
   retained?: boolean;
   qos?: 0 | 1 | 2;
   lastPayloadId?: string;
+  highlightedUntil?: number;
 }
 
 /**
@@ -71,6 +72,7 @@ function buildNestedChildren(
     retained: node.retained,
     qos: node.qos,
     lastPayloadId: node.lastPayloadId,
+    highlightedUntil: node.highlightedUntil,
   };
 
   // If node has children, recursively build them

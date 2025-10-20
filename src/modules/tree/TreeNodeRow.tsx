@@ -1,6 +1,6 @@
 // Tree node row component for virtualized list
 
-import type { CSSProperties } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 import { useTopicStore } from './useTopicStore';
 import { useUiStore } from '../ui/useUiStore';
 import { formatTime } from '../../utils/time';
@@ -17,6 +17,7 @@ export function TreeNodeRow({ nodeId, depth, style }: TreeNodeRowProps) {
   const toggleExpanded = useTopicStore((s) => s.toggleExpanded);
   const selectedNodeId = useUiStore((s) => s.selectedNodeId);
   const setSelectedNodeId = useUiStore((s) => s.setSelectedNodeId);
+  const [, setTick] = useState(0);
 
   const node = nodes.get(nodeId);
 
@@ -26,6 +27,22 @@ export function TreeNodeRow({ nodeId, depth, style }: TreeNodeRowProps) {
   const isSelected = selectedNodeId === nodeId;
   const isExpanded = node.expanded;
 
+  // Check if node should be highlighted
+  const isHighlighted = node.highlightedUntil && Date.now() < node.highlightedUntil;
+
+  // Force re-render when highlight expires
+  useEffect(() => {
+    if (node.highlightedUntil) {
+      const timeUntilExpire = node.highlightedUntil - Date.now();
+      if (timeUntilExpire > 0) {
+        const timer = setTimeout(() => {
+          setTick((t) => t + 1);
+        }, timeUntilExpire);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [node.highlightedUntil]);
+
   return (
     <div
       style={style}
@@ -34,6 +51,7 @@ export function TreeNodeRow({ nodeId, depth, style }: TreeNodeRowProps) {
         hover:bg-gray-100 dark:hover:bg-gray-800
         cursor-pointer transition-colors
         ${isSelected ? 'bg-blue-100 dark:bg-blue-900' : ''}
+        ${isHighlighted ? 'highlight-new-message' : ''}
       `}
       onClick={() => {
         setSelectedNodeId(nodeId);

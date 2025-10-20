@@ -26,3 +26,30 @@ body {
     @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
   }
 }
+
+/* Highlight animation for new messages */
+@keyframes highlight-pulse {
+  0% {
+    background-color: rgb(191, 219, 254); /* blue-200 */
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes highlight-pulse-dark {
+  0% {
+    background-color: rgb(30, 58, 138); /* blue-900 with reduced opacity */
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.highlight-new-message {
+  animation: highlight-pulse 900ms ease-out forwards;
+}
+
+.dark .highlight-new-message {
+  animation: highlight-pulse-dark 900ms ease-out forwards;
+}

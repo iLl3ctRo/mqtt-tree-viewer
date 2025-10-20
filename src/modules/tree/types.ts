@@ -15,6 +15,7 @@ export type TopicNode = {
   retained?: boolean;
   qos?: 0 | 1 | 2;
   hasChildrenPlaceholder?: boolean; // for lazy UI expansion
+  highlightedUntil?: number; // timestamp when highlight should end
 };
 
 export type MessageRecord = {

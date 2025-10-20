@@ -1,5 +1,6 @@
 // Custom node renderer for react-arborist
 
+import { useState, useEffect } from 'react';
 import type { NodeRendererProps } from 'react-arborist';
 import { useUiStore } from '../ui/useUiStore';
 import { formatTime } from '../../utils/time';
@@ -7,10 +8,27 @@ import type { TreeNodeData } from './treeAdapter';
 
 export function ArboristNode({ node, style, dragHandle }: NodeRendererProps<TreeNodeData>) {
   const selectedNodeId = useUiStore((s) => s.selectedNodeId);
+  const [, setTick] = useState(0);
 
   const hasChildren = node.children && node.children.length > 0;
   const isSelected = selectedNodeId === node.data.id;
   const isOpen = node.isOpen;
+
+  // Check if node should be highlighted
+  const isHighlighted = node.data.highlightedUntil && Date.now() < node.data.highlightedUntil;
+
+  // Force re-render when highlight expires
+  useEffect(() => {
+    if (node.data.highlightedUntil) {
+      const timeUntilExpire = node.data.highlightedUntil - Date.now();
+      if (timeUntilExpire > 0) {
+        const timer = setTimeout(() => {
+          setTick((t) => t + 1);
+        }, timeUntilExpire);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [node.data.highlightedUntil]);
 
   return (
     <div
@@ -21,6 +39,7 @@ export function ArboristNode({ node, style, dragHandle }: NodeRendererProps<Tree
         hover:bg-gray-100 dark:hover:bg-gray-800
         cursor-pointer transition-colors
         ${isSelected ? 'bg-blue-100 dark:bg-blue-900' : ''}
+        ${isHighlighted ? 'highlight-new-message' : ''}
       `}
       onClick={(e) => {
         node.handleClick(e);

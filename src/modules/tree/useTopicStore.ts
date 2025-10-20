@@ -5,6 +5,7 @@ import type { TopicNode, TopicNodeId, MessageRecord } from './types';
 
 // Message batching configuration
 const MAX_MESSAGES_STORED = 50000; // Global message cap
+const HIGHLIGHT_DURATION_MS = 900; // Duration of highlight animation
 
 type TopicState = {
   nodes: Map<TopicNodeId, TopicNode>;
@@ -47,6 +48,48 @@ function ensurePath(nodes: Map<TopicNodeId, TopicNode>, topic: string): void {
       }
     }
   });
+}
+
+// Find the first visible ancestor of a node
+// A node is visible only if ALL its ancestors are expanded
+function findVisibleNode(nodes: Map<TopicNodeId, TopicNode>, nodeId: TopicNodeId): TopicNodeId {
+  const node = nodes.get(nodeId);
+  if (!node) return nodeId;
+
+  // If node has no parent, it's a root and always visible
+  if (!node.parentId) return nodeId;
+
+  // Check if ALL ancestors are expanded by traversing up the tree
+  let currentId: TopicNodeId | undefined = node.parentId;
+
+  while (currentId) {
+    const currentNode = nodes.get(currentId);
+    if (!currentNode) break;
+
+    // If any ancestor is not expanded, the target node is not visible
+    // Return the first collapsed ancestor
+    if (!currentNode.expanded) {
+      return currentId;
+    }
+
+    // Move up to the next parent
+    currentId = currentNode.parentId;
+  }
+
+  // All ancestors are expanded, so this node is visible
+  return nodeId;
+}
+
+// Set highlight on a node
+function setNodeHighlight(nodes: Map<TopicNodeId, TopicNode>, nodeId: TopicNodeId): void {
+  const visibleNodeId = findVisibleNode(nodes, nodeId);
+  const node = nodes.get(visibleNodeId);
+  if (node) {
+    nodes.set(visibleNodeId, {
+      ...node,
+      highlightedUntil: Date.now() + HIGHLIGHT_DURATION_MS,
+    });
+  }
 }
 
 export const useTopicStore = create<TopicState>((set) => ({
@@ -103,11 +146,17 @@ export const useTopicStore = create<TopicState>((set) => ({
       }
 
       const leaf = nodes.get(msg.topic)!;
-      leaf.lastPayloadId = msg.id;
-      leaf.lastTimestamp = msg.ts;
-      leaf.retained = msg.retained;
-      leaf.qos = msg.qos;
-      nodes.set(leaf.id, leaf);
+      const updatedLeaf = {
+        ...leaf,
+        lastPayloadId: msg.id,
+        lastTimestamp: msg.ts,
+        retained: msg.retained,
+        qos: msg.qos,
+      };
+      nodes.set(updatedLeaf.id, updatedLeaf);
+
+      // Set highlight on the visible node (the leaf or its first visible parent)
+      setNodeHighlight(nodes, msg.topic);
 
       return { nodes, messages, messagesByTopic };
     }),
@@ -128,11 +177,17 @@ export const useTopicStore = create<TopicState>((set) => ({
         messagesByTopic.set(msg.topic, [msg.id, ...topicHistory]);
 
         const leaf = nodes.get(msg.topic)!;
-        leaf.lastPayloadId = msg.id;
-        leaf.lastTimestamp = msg.ts;
-        leaf.retained = msg.retained;
-        leaf.qos = msg.qos;
-        nodes.set(leaf.id, leaf);
+        const updatedLeaf = {
+          ...leaf,
+          lastPayloadId: msg.id,
+          lastTimestamp: msg.ts,
+          retained: msg.retained,
+          qos: msg.qos,
+        };
+        nodes.set(updatedLeaf.id, updatedLeaf);
+
+        // Set highlight on the visible node (the leaf or its first visible parent)
+        setNodeHighlight(nodes, msg.topic);
       }
 
       // Apply message cap
