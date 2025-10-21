@@ -27,6 +27,8 @@ export function ExplorerPage() {
   const expandAll = useTopicStore((s) => s.expandAll);
   const collapseAll = useTopicStore((s) => s.collapseAll);
 
+  const resetStats = useConnectionStore((s) => s.resetStats);
+
   const selectedNodeId = useUiStore((s) => s.selectedNodeId);
   const selectedMessageId = useUiStore((s) => s.selectedMessageId);
   const setSelectedMessageId = useUiStore((s) => s.setSelectedMessageId);
@@ -162,7 +164,7 @@ export function ExplorerPage() {
               <Button variant="ghost" size="sm" onClick={collapseAll}>
                 Collapse All
               </Button>
-              <Button variant="ghost" size="sm" onClick={clearAll}>
+              <Button variant="ghost" size="sm" onClick={() => { clearAll(); resetStats(); }}>
                 Clear
               </Button>
             </div>
