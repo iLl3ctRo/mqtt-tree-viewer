@@ -1,5 +1,7 @@
 // Time formatting utilities
 
+import i18n from '../i18n/config';
+
 export function formatTime(timestamp?: number): string {
   if (!timestamp) return '';
   const date = new Date(timestamp);
@@ -8,19 +10,19 @@ export function formatTime(timestamp?: number): string {
 
   // Less than 1 minute
   if (diff < 60000) {
-    return 'just now';
+    return i18n.t('time.justNow');
   }
 
   // Less than 1 hour
   if (diff < 3600000) {
     const minutes = Math.floor(diff / 60000);
-    return `${minutes}m ago`;
+    return i18n.t('time.minutesAgo', { count: minutes });
   }
 
   // Less than 24 hours
   if (diff < 86400000) {
     const hours = Math.floor(diff / 3600000);
-    return `${hours}h ago`;
+    return i18n.t('time.hoursAgo', { count: hours });
   }
 
   // More than 24 hours

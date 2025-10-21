@@ -1,0 +1,80 @@
+{
+  "app": {
+    "title": "MQTT Tree Viewer"
+  },
+  "connect": {
+    "title": "MQTT Tree Viewer",
+    "selectProfile": "Please select a connection profile",
+    "connecting": "Connecting...",
+    "connect": "Connect",
+    "subscription": "Subscription",
+    "topicFilter": "Topic Filter",
+    "topicFilterPlaceholder": "# (subscribe to all topics)",
+    "qosLevel": "QoS Level",
+    "qos": "QoS"
+  },
+  "profile": {
+    "create": "Create Profile",
+    "edit": "Edit Profile",
+    "update": "Update Profile",
+    "new": "New Profile",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "name": "Profile Name",
+    "namePlaceholder": "My MQTT Broker",
+    "brokerUrl": "Broker URL",
+    "brokerUrlPlaceholder": "wss://broker.example.com:8083/mqtt",
+    "clientId": "Client ID",
+    "clientIdPlaceholder": "Auto-generated if empty",
+    "username": "Username",
+    "usernamePlaceholder": "Optional",
+    "password": "Password",
+    "passwordPlaceholder": "Optional",
+    "keepalive": "Keepalive (seconds)",
+    "sessionExpiry": "Session Expiry (seconds)",
+    "cleanStart": "Clean Start",
+    "created": "Profile created",
+    "updated": "Profile updated",
+    "deleted": "Profile deleted",
+    "cannotDeleteLast": "Cannot delete the last profile",
+    "saveFailed": "Failed to save profile",
+    "deleteFailed": "Failed to delete profile"
+  },
+  "explorer": {
+    "title": "MQTT Explorer",
+    "messages": "messages",
+    "message": "message",
+    "pause": "Pause",
+    "resume": "Resume",
+    "disconnect": "Disconnect",
+    "searchTopics": "Search topics...",
+    "expandAll": "Expand All",
+    "collapseAll": "Collapse All",
+    "clear": "Clear",
+    "selectTopic": "Select a topic to view its messages",
+    "noMessages": "No messages received on this topic",
+    "messageHistory": "Message History",
+    "properties": "Properties",
+    "hideProperties": "Hide Properties",
+    "showProperties": "Show Properties"
+  },
+  "status": {
+    "connected": "connected",
+    "connecting": "connecting",
+    "reconnecting": "reconnecting",
+    "disconnected": "disconnected",
+    "error": "error",
+    "connectionSuccess": "Connected to broker",
+    "connectionFailed": "Connection failed"
+  },
+  "toast": {
+    "warning": "Warning"
+  },
+  "time": {
+    "justNow": "just now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago"
+  }
+}

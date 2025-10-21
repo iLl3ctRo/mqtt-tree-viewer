@@ -1,6 +1,7 @@
 // Profile form component
 
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import type { ConnectionProfile } from '../mqtt/types';
@@ -12,6 +13,7 @@ export interface ProfileFormProps {
 }
 
 export function ProfileForm({ initialData, onSubmit, onCancel }: ProfileFormProps) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<ConnectionProfile>(
     initialData || {
       id: crypto.randomUUID(),
@@ -39,53 +41,53 @@ export function ProfileForm({ initialData, onSubmit, onCancel }: ProfileFormProp
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Profile Name"
+        label={t('profile.name')}
         value={formData.name}
         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        placeholder="My MQTT Broker"
+        placeholder={t('profile.namePlaceholder')}
         required
         fullWidth
       />
 
       <Input
-        label="Broker URL"
+        label={t('profile.brokerUrl')}
         value={formData.url}
         onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-        placeholder="wss://broker.example.com:8083/mqtt"
+        placeholder={t('profile.brokerUrlPlaceholder')}
         required
         fullWidth
       />
 
       <Input
-        label="Client ID"
+        label={t('profile.clientId')}
         value={formData.clientId || ''}
         onChange={(e) => setFormData({ ...formData, clientId: e.target.value })}
-        placeholder="Auto-generated if empty"
+        placeholder={t('profile.clientIdPlaceholder')}
         fullWidth
       />
 
       <div className="grid grid-cols-2 gap-4">
         <Input
-          label="Username"
+          label={t('profile.username')}
           value={formData.username || ''}
           onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-          placeholder="Optional"
+          placeholder={t('profile.usernamePlaceholder')}
           fullWidth
         />
 
         <Input
-          label="Password"
+          label={t('profile.password')}
           type="password"
           value={formData.passwordEnc || ''}
           onChange={(e) => setFormData({ ...formData, passwordEnc: btoa(e.target.value) })}
-          placeholder="Optional"
+          placeholder={t('profile.passwordPlaceholder')}
           fullWidth
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <Input
-          label="Keepalive (seconds)"
+          label={t('profile.keepalive')}
           type="number"
           value={formData.keepalive || 60}
           onChange={(e) => setFormData({ ...formData, keepalive: Number(e.target.value) })}
@@ -95,7 +97,7 @@ export function ProfileForm({ initialData, onSubmit, onCancel }: ProfileFormProp
         />
 
         <Input
-          label="Session Expiry (seconds)"
+          label={t('profile.sessionExpiry')}
           type="number"
           value={formData.sessionExpiry || 0}
           onChange={(e) => setFormData({ ...formData, sessionExpiry: Number(e.target.value) })}
@@ -113,17 +115,17 @@ export function ProfileForm({ initialData, onSubmit, onCancel }: ProfileFormProp
           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
         />
         <label htmlFor="cleanStart" className="ml-2 block text-sm text-gray-900 dark:text-gray-100">
-          Clean Start
+          {t('profile.cleanStart')}
         </label>
       </div>
 
       <div className="flex gap-3">
         <Button type="submit" variant="primary" disabled={loading} fullWidth>
-          {loading ? 'Saving...' : initialData ? 'Update Profile' : 'Create Profile'}
+          {loading ? t('profile.saving') : initialData ? t('profile.update') : t('profile.create')}
         </Button>
         {onCancel && (
           <Button type="button" variant="ghost" onClick={onCancel}>
-            Cancel
+            {t('profile.cancel')}
           </Button>
         )}
       </div>

@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { TreeViewArborist } from '../modules/tree/TreeViewArborist';
 import { PayloadPanel } from '../modules/payload/PayloadPanel';
 import { PropertiesPanel } from '../modules/payload/PropertiesPanel';
 import { MessageHistoryPanel } from '../modules/payload/MessageHistoryPanel';
 import { Button } from '../modules/ui/Button';
 import { Input } from '../modules/ui/Input';
+import { LanguageSwitcher } from '../modules/ui/LanguageSwitcher';
 import { useConnectionStore } from '../modules/mqtt/useConnectionStore';
 import { useTopicStore } from '../modules/tree/useTopicStore';
 import { useUiStore } from '../modules/ui/useUiStore';
@@ -15,6 +17,7 @@ import { useMqttClient } from '../modules/mqtt/useMqttClient';
 import type { MessageRecord } from '../modules/tree/types';
 
 export function ExplorerPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { disconnect } = useMqttClient();
   const status = useConnectionStore((s) => s.status);
@@ -125,22 +128,25 @@ export function ExplorerPage() {
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">MQTT Explorer</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('explorer.title')}</h1>
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 rounded-full ${statusColor}`} />
-              <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">{status}</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">{t(`status.${status}`)}</span>
             </div>
             {activeProfile && (
               <span className="text-sm text-gray-500 dark:text-gray-400">• {activeProfile.name}</span>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">{messagesReceived} messages</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              {messagesReceived} {messagesReceived === 1 ? t('explorer.message') : t('explorer.messages')}
+            </span>
+            <LanguageSwitcher />
             <Button variant="secondary" size="sm" onClick={togglePause}>
-              {isPaused ? 'Resume' : 'Pause'}
+              {isPaused ? t('explorer.resume') : t('explorer.pause')}
             </Button>
             <Button variant="ghost" size="sm" onClick={handleDisconnect}>
-              Disconnect
+              {t('explorer.disconnect')}
             </Button>
           </div>
         </div>
@@ -152,20 +158,20 @@ export function ExplorerPage() {
         <div className="w-1/3 border-r border-gray-200 dark:border-gray-700 flex flex-col">
           <div className="p-3 space-y-2 border-b border-gray-200 dark:border-gray-700">
             <Input
-              placeholder="Search topics..."
+              placeholder={t('explorer.searchTopics')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               fullWidth
             />
             <div className="flex gap-2">
               <Button variant="ghost" size="sm" onClick={expandAll}>
-                Expand All
+                {t('explorer.expandAll')}
               </Button>
               <Button variant="ghost" size="sm" onClick={collapseAll}>
-                Collapse All
+                {t('explorer.collapseAll')}
               </Button>
               <Button variant="ghost" size="sm" onClick={() => { clearAll(); resetStats(); }}>
-                Clear
+                {t('explorer.clear')}
               </Button>
             </div>
           </div>
@@ -184,12 +190,12 @@ export function ExplorerPage() {
                     {selectedNodeId}
                   </h2>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    {topicMessages.length} {topicMessages.length === 1 ? 'message' : 'messages'}
+                    {topicMessages.length} {topicMessages.length === 1 ? t('explorer.message') : t('explorer.messages')}
                   </p>
                 </div>
                 {selectedMessage && (
                   <Button variant="ghost" size="sm" onClick={togglePropertiesPanel}>
-                    {showPropertiesPanel ? 'Hide' : 'Show'} Properties
+                    {showPropertiesPanel ? t('explorer.hideProperties') : t('explorer.showProperties')}
                   </Button>
                 )}
               </div>
@@ -212,7 +218,7 @@ export function ExplorerPage() {
                     </>
                   ) : topicMessages.length === 0 ? (
                     <div className="flex-1 flex items-center justify-center text-gray-500 dark:text-gray-400">
-                      <p>No messages received on this topic</p>
+                      <p>{t('explorer.noMessages')}</p>
                     </div>
                   ) : null}
                 </div>
@@ -223,7 +229,7 @@ export function ExplorerPage() {
                     onClick={() => setIsHistoryCollapsed(!isHistoryCollapsed)}
                   >
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                      Message History
+                      {t('explorer.messageHistory')}
                     </h3>
                     <button className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
                       {isHistoryCollapsed ? '▲' : '▼'}
@@ -245,7 +251,7 @@ export function ExplorerPage() {
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-gray-500 dark:text-gray-400">
-              <p>Select a topic to view its messages</p>
+              <p>{t('explorer.selectTopic')}</p>
             </div>
           )}
         </div>

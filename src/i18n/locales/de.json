@@ -1,0 +1,80 @@
+{
+  "app": {
+    "title": "MQTT Baum-Betrachter"
+  },
+  "connect": {
+    "title": "MQTT Baum-Betrachter",
+    "selectProfile": "Bitte wählen Sie ein Verbindungsprofil",
+    "connecting": "Verbinde...",
+    "connect": "Verbinden",
+    "subscription": "Abonnement",
+    "topicFilter": "Themenfilter",
+    "topicFilterPlaceholder": "# (alle Themen abonnieren)",
+    "qosLevel": "QoS-Stufe",
+    "qos": "QoS"
+  },
+  "profile": {
+    "create": "Profil erstellen",
+    "edit": "Profil bearbeiten",
+    "update": "Profil aktualisieren",
+    "new": "Neues Profil",
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "saving": "Speichert...",
+    "name": "Profilname",
+    "namePlaceholder": "Mein MQTT-Broker",
+    "brokerUrl": "Broker-URL",
+    "brokerUrlPlaceholder": "wss://broker.example.com:8083/mqtt",
+    "clientId": "Client-ID",
+    "clientIdPlaceholder": "Automatisch generiert, wenn leer",
+    "username": "Benutzername",
+    "usernamePlaceholder": "Optional",
+    "password": "Passwort",
+    "passwordPlaceholder": "Optional",
+    "keepalive": "Keepalive (Sekunden)",
+    "sessionExpiry": "Sitzungsablauf (Sekunden)",
+    "cleanStart": "Sauberer Start",
+    "created": "Profil erstellt",
+    "updated": "Profil aktualisiert",
+    "deleted": "Profil gelöscht",
+    "cannotDeleteLast": "Das letzte Profil kann nicht gelöscht werden",
+    "saveFailed": "Profil speichern fehlgeschlagen",
+    "deleteFailed": "Profil löschen fehlgeschlagen"
+  },
+  "explorer": {
+    "title": "MQTT Explorer",
+    "messages": "Nachrichten",
+    "message": "Nachricht",
+    "pause": "Pausieren",
+    "resume": "Fortsetzen",
+    "disconnect": "Trennen",
+    "searchTopics": "Themen durchsuchen...",
+    "expandAll": "Alle erweitern",
+    "collapseAll": "Alle einklappen",
+    "clear": "Löschen",
+    "selectTopic": "Wählen Sie ein Thema aus, um seine Nachrichten anzuzeigen",
+    "noMessages": "Keine Nachrichten zu diesem Thema empfangen",
+    "messageHistory": "Nachrichtenverlauf",
+    "properties": "Eigenschaften",
+    "hideProperties": "Eigenschaften ausblenden",
+    "showProperties": "Eigenschaften anzeigen"
+  },
+  "status": {
+    "connected": "verbunden",
+    "connecting": "verbindet",
+    "reconnecting": "verbindet neu",
+    "disconnected": "getrennt",
+    "error": "Fehler",
+    "connectionSuccess": "Mit Broker verbunden",
+    "connectionFailed": "Verbindung fehlgeschlagen"
+  },
+  "toast": {
+    "warning": "Warnung"
+  },
+  "time": {
+    "justNow": "gerade eben",
+    "minutesAgo": "vor {{count}} Min.",
+    "hoursAgo": "vor {{count}} Std."
+  }
+}

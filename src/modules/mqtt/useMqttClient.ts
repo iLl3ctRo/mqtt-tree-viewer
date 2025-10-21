@@ -10,11 +10,12 @@ import type { ConnectionProfile, SubscriptionSpec } from './types';
 import type { MessageRecord } from '../tree/types';
 import { decodePreview } from '../payload/decode';
 import { MessageBatcher } from '../tree/messageBatcher';
+import type { TauriMqttClient } from './tauriClient';
 
 const BATCH_INTERVAL_MS = 120; // ~60 Hz update rate
 
 export function useMqttClient() {
-  const clientRef = useRef<MqttClient | null>(null);
+  const clientRef = useRef<MqttClient | TauriMqttClient | null>(null);
   const batcherRef = useRef<MessageBatcher | null>(null);
   const setStatus = useConnectionStore((s) => s.setStatus);
   const setError = useConnectionStore((s) => s.setError);
@@ -55,8 +56,10 @@ export function useMqttClient() {
         // For browser clients (mqtt.js), subscribe to filters
         // Tauri clients handle subscriptions during connect
         if (!('connect' in client && typeof (client as any).connect === 'function')) {
+          // Type guard: if it's not a Tauri client, it's an MqttClient
+          const mqttClient = client as MqttClient;
           subscriptions.forEach((sub) => {
-            client.subscribe(
+            mqttClient.subscribe(
               sub.filter,
               {
                 qos: sub.qos,

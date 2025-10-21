@@ -1,5 +1,6 @@
 // Profile switcher component
 
+import { useTranslation } from 'react-i18next';
 import { Select } from '../ui/Select';
 import { Button } from '../ui/Button';
 import { useProfiles } from './useProfiles';
@@ -14,6 +15,7 @@ export interface ProfileSwitcherProps {
 }
 
 export function ProfileSwitcher({ selectedProfileId, onSelect, onNew, onEdit, onDelete }: ProfileSwitcherProps) {
+  const { t } = useTranslation();
   const { profiles } = useProfiles();
 
   const selectedProfile = profiles.find((p) => p.id === selectedProfileId);
@@ -22,7 +24,7 @@ export function ProfileSwitcher({ selectedProfileId, onSelect, onNew, onEdit, on
     <div className="space-y-3">
       <div className="flex gap-2">
         <Select
-          label="Connection Profile"
+          label={t('profile.name')}
           value={selectedProfileId || ''}
           onChange={(e) => {
             const profile = profiles.find((p) => p.id === e.target.value);
@@ -33,7 +35,7 @@ export function ProfileSwitcher({ selectedProfileId, onSelect, onNew, onEdit, on
         />
         {onNew && (
           <Button variant="secondary" size="md" onClick={onNew} className="mt-6">
-            New
+            {t('profile.new')}
           </Button>
         )}
       </div>
@@ -46,23 +48,23 @@ export function ProfileSwitcher({ selectedProfileId, onSelect, onNew, onEdit, on
                 <span className="font-medium">URL:</span> {selectedProfile.url}
               </p>
               <p className="text-gray-600 dark:text-gray-400">
-                <span className="font-medium">Client ID:</span> {selectedProfile.clientId || 'Auto-generated'}
+                <span className="font-medium">{t('profile.clientId')}:</span> {selectedProfile.clientId || t('profile.clientIdPlaceholder')}
               </p>
               {selectedProfile.username && (
                 <p className="text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">Username:</span> {selectedProfile.username}
+                  <span className="font-medium">{t('profile.username')}:</span> {selectedProfile.username}
                 </p>
               )}
             </div>
             <div className="flex gap-2 ml-3">
               {onEdit && (
                 <Button variant="ghost" size="sm" onClick={() => onEdit(selectedProfile)}>
-                  Edit
+                  {t('profile.edit')}
                 </Button>
               )}
               {onDelete && profiles.length > 1 && (
                 <Button variant="danger" size="sm" onClick={() => onDelete(selectedProfile.id)}>
-                  Delete
+                  {t('profile.delete')}
                 </Button>
               )}
             </div>
