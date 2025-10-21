@@ -1,6 +1,7 @@
 // Diff viewer component for comparing two MQTT messages
 
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { MessageRecord } from '../tree/types';
 import {
   createTextDiff,
@@ -26,6 +27,7 @@ export function DiffViewer({ oldMessage, newMessage }: DiffViewerProps) {
   // Always default to text diff
   const [diffMode, setDiffMode] = useState<DiffMode>('text');
   const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
 
   // Calculate diffs
   const textDiff = useMemo<TextDiffResult | null>(() => {
@@ -77,7 +79,7 @@ export function DiffViewer({ oldMessage, newMessage }: DiffViewerProps) {
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
-              Text Diff
+              {t('diff.textDiff')}
             </button>
           )}
           {jsonDiff && (
@@ -89,7 +91,7 @@ export function DiffViewer({ oldMessage, newMessage }: DiffViewerProps) {
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
-              JSON Diff
+              {t('diff.jsonDiff')}
             </button>
           )}
           <button
@@ -100,7 +102,7 @@ export function DiffViewer({ oldMessage, newMessage }: DiffViewerProps) {
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
-            Hex Diff
+            {t('diff.hexDiff')}
           </button>
           <button
             onClick={() => setDiffMode('metadata')}
@@ -110,7 +112,7 @@ export function DiffViewer({ oldMessage, newMessage }: DiffViewerProps) {
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
-            Metadata
+            {t('diff.metadata')}
           </button>
         </div>
         <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -124,7 +126,7 @@ export function DiffViewer({ oldMessage, newMessage }: DiffViewerProps) {
           <div className="flex items-center justify-center h-full">
             <div className="text-center text-gray-500 dark:text-gray-400">
               <div className="text-4xl mb-2">✓</div>
-              <div>Messages are identical</div>
+              <div>{t('diff.messagesIdentical')}</div>
             </div>
           </div>
         )}
@@ -159,6 +161,7 @@ function TextDiffView({
   onCopy: (text: string) => void;
   copied: boolean;
 }) {
+  const { t } = useTranslation();
   const diffText = useMemo(() => {
     return diff.hunks
       .map(hunk => {
@@ -176,7 +179,7 @@ function TextDiffView({
         onClick={() => onCopy(diffText)}
         className="absolute top-2 right-2 px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors z-10"
       >
-        {copied ? 'Copied!' : 'Copy'}
+        {copied ? t('diff.copied') : t('diff.copy')}
       </button>
       <div className="bg-gray-50 dark:bg-gray-900 rounded overflow-auto">
         {diff.hunks.map((hunk, hunkIdx) => (
@@ -229,6 +232,7 @@ function JsonDiffView({
   onCopy: (text: string) => void;
   copied: boolean;
 }) {
+  const { t } = useTranslation();
   const diffText = useMemo(() => {
     return diff.changes
       .map(change => {
@@ -250,16 +254,16 @@ function JsonDiffView({
         onClick={() => onCopy(diffText)}
         className="absolute top-2 right-2 px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors z-10"
       >
-        {copied ? 'Copied!' : 'Copy'}
+        {copied ? t('diff.copied') : t('diff.copy')}
       </button>
       <div className="bg-gray-50 dark:bg-gray-900 rounded p-4 overflow-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-300 dark:border-gray-700">
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">Path</th>
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">Change</th>
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">Old Value</th>
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">New Value</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.path')}</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.change')}</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.oldValue')}</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.newValue')}</th>
             </tr>
           </thead>
           <tbody>
@@ -278,7 +282,7 @@ function JsonDiffView({
                         : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
                     }`}
                   >
-                    {change.type === 'added' ? 'Added' : change.type === 'removed' ? 'Removed' : 'Changed'}
+                    {change.type === 'added' ? t('diff.added') : change.type === 'removed' ? t('diff.removed') : t('diff.changed')}
                   </span>
                 </td>
                 <td className="py-2 px-2 font-mono text-xs text-gray-600 dark:text-gray-400">
@@ -318,6 +322,7 @@ function HexDiffView({
   onCopy: (text: string) => void;
   copied: boolean;
 }) {
+  const { t } = useTranslation();
   const diffText = useMemo(() => {
     return diff.changes
       .map(change => {
@@ -340,16 +345,16 @@ function HexDiffView({
         onClick={() => onCopy(diffText)}
         className="absolute top-2 right-2 px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors z-10"
       >
-        {copied ? 'Copied!' : 'Copy'}
+        {copied ? t('diff.copied') : t('diff.copy')}
       </button>
       <div className="bg-gray-50 dark:bg-gray-900 rounded p-4 overflow-auto">
         <table className="w-full text-sm font-mono">
           <thead>
             <tr className="border-b border-gray-300 dark:border-gray-700">
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">Offset</th>
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">Change</th>
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">Old Byte</th>
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">New Byte</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.offset')}</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.change')}</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.oldByte')}</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.newByte')}</th>
             </tr>
           </thead>
           <tbody>
@@ -383,7 +388,7 @@ function HexDiffView({
         </table>
         {diff.changes.length > 100 && (
           <div className="mt-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-            Showing first 100 of {diff.changes.length} changes
+            {t('diff.showingFirstNChanges', { count: 100, total: diff.changes.length })}
           </div>
         )}
       </div>
@@ -401,6 +406,7 @@ function MetadataDiffView({
   onCopy: (text: string) => void;
   copied: boolean;
 }) {
+  const { t } = useTranslation();
   const diffText = useMemo(() => {
     if (!diff.hasChanges) return 'No metadata differences';
     return diff.differences
@@ -413,7 +419,7 @@ function MetadataDiffView({
       <div className="flex items-center justify-center h-full">
         <div className="text-center text-gray-500 dark:text-gray-400">
           <div className="text-4xl mb-2">✓</div>
-          <div>No metadata differences</div>
+          <div>{t('diff.noMetadataDifferences')}</div>
         </div>
       </div>
     );
@@ -425,15 +431,15 @@ function MetadataDiffView({
         onClick={() => onCopy(diffText)}
         className="absolute top-2 right-2 px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors z-10"
       >
-        {copied ? 'Copied!' : 'Copy'}
+        {copied ? t('diff.copied') : t('diff.copy')}
       </button>
       <div className="bg-gray-50 dark:bg-gray-900 rounded p-4 overflow-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-300 dark:border-gray-700">
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">Field</th>
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">Old Value</th>
-              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">New Value</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.field')}</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.oldValue')}</th>
+              <th className="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">{t('diff.newValue')}</th>
             </tr>
           </thead>
           <tbody>

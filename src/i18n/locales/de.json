@@ -76,5 +76,38 @@
     "justNow": "gerade eben",
     "minutesAgo": "vor {{count}} Min.",
     "hoursAgo": "vor {{count}} Std."
+  },
+  "diff": {
+    "textDiff": "Text-Diff",
+    "jsonDiff": "JSON-Diff",
+    "hexDiff": "Hex-Diff",
+    "metadata": "Metadaten",
+    "copy": "Kopieren",
+    "copied": "Kopiert!",
+    "messagesIdentical": "Nachrichten sind identisch",
+    "noMetadataDifferences": "Keine Metadaten-Unterschiede",
+    "path": "Pfad",
+    "change": "Änderung",
+    "oldValue": "Alter Wert",
+    "newValue": "Neuer Wert",
+    "offset": "Offset",
+    "oldByte": "Altes Byte",
+    "newByte": "Neues Byte",
+    "field": "Feld",
+    "added": "Hinzugefügt",
+    "removed": "Entfernt",
+    "changed": "Geändert",
+    "showingFirstNChanges": "Zeige erste {{count}} von {{total}} Änderungen"
+  },
+  "properties": {
+    "topic": "Thema:",
+    "timestamp": "Zeitstempel:",
+    "qos": "QoS:",
+    "retained": "Beibehalten:",
+    "duplicate": "Duplikat:",
+    "contentType": "Inhaltstyp:",
+    "mqttV5Properties": "MQTT v5 Eigenschaften:",
+    "yes": "Ja",
+    "no": "Nein"
   }
 }
